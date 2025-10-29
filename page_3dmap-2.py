@@ -3,25 +3,30 @@ import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
 
+# 設定頁面標題
+st.title("🌎 Plotly 3D 地圖展示 (向量)")
 
-st.title("Plotly 3D 地圖 (向量 - 全球航班起始點)")
+## --- 第一個圖表：3D 地理散點圖 (地震) ---
+st.header("1. 3D 地理散點圖 (地球儀 - 地震)")
 
-# --- 1. 載入 Plotly 內建的範例資料 ---
-df = pd.read_csv("https://raw.githubusercontent.com/plotly/datasets/master/2011_february_aa_flight_paths.csv")
+# 1. 載入 Plotly 內建的範例資料
+df = pd.read_csv("https://raw.githubusercontent.com/plotly/datasets/master/earthquakes-23k.csv")
 
-# --- 2. 建立 3D 地理散點圖 (scatter_geo) ---
-fig = px.scatter_geo(
+# 2. 建立 3D 地理散點圖 (scatter_geo)
+# 🚨 修正: 將 'color' 和 'hover_name' 替換為資料框中現有的欄位。
+# 資料框中可用的欄位為: 'Date', 'Latitude', 'Longitude', 'Magnitude'
+fig_earthquake = px.scatter_geo(
     df,
-    lat="start_lat",    
-    lon="start_lon",    
-    color="airline",   
-    hover_name="airport1", 
-    size=None,          
-    projection="orthographic",
+    lat="Latitude",
+    lon="Longitude",
+    color="Magnitude",      # 修正: 依據地震規模上色
+    hover_name="Date",      # 修正: 滑鼠懸停時顯示日期
+    size="Magnitude",       # 地震規模代表點的大小
+    projection="orthographic", # 設定為地球儀視角
+    title="全球地震分佈 (23k 筆資料)"
 )
 
-st.plotly_chart(fig, use_container_width=True)
-
+st.plotly_chart(fig_earthquake, use_container_width=True)
 
 st.title("Plotly 3D 地圖 (網格 -聖布魯諾山高程)")
 
