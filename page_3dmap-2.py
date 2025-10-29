@@ -14,8 +14,8 @@ fig = px.scatter_geo(
     df,
     lat="start_lat",    
     lon="start_lon",    
-    color="airport",   
-    hover_name="airport", 
+    color="airline",   
+    hover_name="airport1", 
     size=None,          
     projection="orthographic",
 )
