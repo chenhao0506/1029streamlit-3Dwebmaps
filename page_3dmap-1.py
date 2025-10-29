@@ -55,7 +55,7 @@ st.pydeck_chart(r_hexagon)
 st.title("桃園市 DEM 模擬（Pydeck 3D 地圖）")
 
 # --- 1. 模擬桃園 DEM 資料 ---
-x, y = np.meshgrid(np.linspace(-1, 1, 60), np.linspace(-1, 1, 60))
+x, y = np.meshgrid(np.linspace(-1, 1, 50), np.linspace(-1, 1, 50))
 
 # 模擬桃園地形（北低南高）
 z = np.exp(-(x**2 + y**2) * 2) * 800 + np.random.rand(50, 50) * 200
@@ -65,7 +65,7 @@ base_lat, base_lon = 24.99, 121.3
 for i in range(50):
     for j in range(50):
         data_dem_list.append({
-            "lon": base_lon + x[i, j] * 0.2,
+            "lon": base_lon + x[i, j] * 0.15,
             "lat": base_lat + y[i, j] * 0.15,
             "elevation": z[i, j]
         })
