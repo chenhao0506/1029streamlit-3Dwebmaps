@@ -9,7 +9,7 @@ st.title("Pydeck 3D 地圖 (向量 - 密度圖)")
 url = "https://tcgbusfs.blob.core.windows.net/dotapp/youbike/v2/youbike_immediate.json"
 
 data_youbike = pd.read_json(url)
-data = data_youbike[['latitude','longitude']].rename(colums={'lng':'lon'})
+data = data_youbike[['latitude','longitude']].rename(columns={'lng':'lon'})
 
 center_lat = 25.0478
 center_lon = 121.5170
