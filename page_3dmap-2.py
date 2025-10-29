@@ -19,10 +19,9 @@ fig_earthquake = px.scatter_geo(
     df,
     lat="Latitude",
     lon="Longitude",
-    color="Magnitude",      # 修正: 依據地震規模上色
-    hover_name="Date",      # 修正: 滑鼠懸停時顯示日期
-    size="Magnitude",       # 地震規模代表點的大小
-    projection="orthographic", # 設定為地球儀視角
+    color="Magnitude",      
+    hover_name="Date",      
+    projection="orthographic", 
     title="全球地震分佈 (23k 筆資料)"
 )
 
