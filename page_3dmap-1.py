@@ -52,44 +52,49 @@ st.pydeck_chart(r_hexagon)
 #          第二個地圖：模擬 DEM
 # ===============================================
 
-st.title("Pydeck 3D 地圖 (網格 - DEM 模擬)")
+st.title("Pydeck 3D 地圖 (網格 - 舊金山高程模擬)")
 
-# --- 1. 模擬 DEM 網格資料 ---
-x, y = np.meshgrid(np.linspace(-1, 1, 50), np.linspace(-1, 1, 50))
-z = np.exp(-(x**2 + y**2) * 2) * 1000
+# --- 1. 載入舊金山建築高度資料 (作為高程點位模擬) ---
+ELEVATION_DATA_URL = 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/sf-bike-parking.json'
 
-data_dem_list = [] 
-base_lat, base_lon = 25.0, 121.5
-for i in range(50):
-    for j in range(50):
-        data_dem_list.append({ # 修正: 將字典附加到列表中
-            "lon": base_lon + x[i, j] * 0.1,
-            "lat": base_lat + y[i, j] * 0.1,
-            "elevation": z[i, j]
-        })
-df_dem = pd.DataFrame(data_dem_list) # 從列表創建 DataFrame
+# 載入 JSON 格式的點位資料
+df_dem = pd.read_json(ELEVATION_DATA_URL)
+
+# 處理資料：將 'position' 欄位的 [lon, lat] 展開
+df_dem['lon'] = df_dem['position'].apply(lambda x: x[0])
+df_dem['lat'] = df_dem['position'].apply(lambda x: x[1])
+
+# 設定地圖中心點和 GridLayer 參數 (舊金山區域)
+base_lat, base_lon = 37.78, -122.42 
+cell_size_param = 200 # 網格大小 (公尺)
+elevation_scale_param = 10 # 放大高程視覺效果
+
 
 # --- 2. 設定 Pydeck 圖層 (GridLayer) ---
-layer_grid = pdk.Layer( # 稍微改個名字避免混淆
+layer_grid = pdk.Layer(
     'GridLayer',
-    data=df_dem,
+    data=df_dem, # 使用舊金山資料
     get_position='[lon, lat]',
     get_elevation_weight='elevation', # 使用 'elevation' 欄位當作高度
-    elevation_scale=1,
-    cell_size=2000,
+    elevation_scale=elevation_scale_param,
+    cell_size=cell_size_param,
     extruded=True,
-    pickable=True # 加上 pickable 才能顯示 tooltip
+    pickable=True, 
+    color_range=[ # 添加顏色漸變
+        [0, 255, 0], [255, 255, 0], [255, 140, 0], [255, 0, 0]
+    ],
+    get_color_weight='elevation',
 )
 
 # --- 3. 設定視角 (View) ---
-view_state_grid = pdk.ViewState( # 稍微改個名字避免混淆
-    latitude=base_lat, longitude=base_lon, zoom=10, pitch=50
+view_state_grid = pdk.ViewState(
+    latitude=base_lat, longitude=base_lon, zoom=12, pitch=50
 )
 
 # --- 4. 組合並顯示 (第二個地圖) ---
-r_grid = pdk.Deck( # 稍微改個名字避免混淆
+r_grid = pdk.Deck(
     layers=[layer_grid],
     initial_view_state=view_state_grid,
-    tooltip={"text": "海拔高度: {elevationValue} 公尺"} # GridLayer 用 elevationValue
+    tooltip={"text": "高程/建築高度: {elevationValue} 公尺"}
 )
 st.pydeck_chart(r_grid)
