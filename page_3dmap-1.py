@@ -57,9 +57,8 @@ st.title("桃園市 DEM 模擬 (Pydeck 3D 地圖）")
 # --- 1. 模擬桃園 DEM 資料 ---
 x, y = np.meshgrid(np.linspace(-1, 1, 50), np.linspace(-1, 1, 50))
 
-# 模擬桃園地形（北低南高）
-z = 1200 * (1 - (y + 1) / 2) + np.random.rand(50, 50) * 150 
-z[z < 0] = 0 # 確保高程不為負值
+# 模擬桃園地形
+z = np.exp(-(x**2 + y**2) * 2) * 1000
 
 data_dem_list = []
 base_lat, base_lon = 24.99, 121.3
@@ -78,7 +77,7 @@ layer_grid = pdk.Layer(
     data=df_dem,
     get_position='[lon, lat]',
     get_elevation_weight='elevation',
-    elevation_scale=15,
+    elevation_scale=1,
     cell_size=1000,
     extruded=True,
     pickable=True
