@@ -52,30 +52,21 @@ st.pydeck_chart(r_hexagon)
 #          第二個地圖：模擬 DEM
 # ===============================================
 
-st.title("Pydeck 3D 地圖 (網格 - 舊金山高程模擬)")
-
-import streamlit as st
-import numpy as np
-import pandas as pd
-import pydeck as pdk
-
 st.title("桃園市 DEM 模擬（Pydeck 3D 地圖）")
 
 # --- 1. 模擬桃園 DEM 資料 ---
-base_lat, base_lon = 24.99, 121.3
-
 x, y = np.meshgrid(np.linspace(-1, 1, 60), np.linspace(-1, 1, 60))
 
-
+# 模擬桃園地形（北低南高）
 z = (
-    300  
-    + 400 * np.exp(-((x - 0.3)**2 + (y + 0.6)**2) * 2)  
-    + 200 * np.exp(-((x + 0.7)**2 + (y - 0.5)**2) * 4)
-    + np.random.normal(0, 15, x.shape)
+    300
+    + 400 * np.exp(-((x - 0.3)**2 + (y + 0.6)**2) * 2)  # 大溪丘陵
+    + 200 * np.exp(-((x + 0.7)**2 + (y - 0.5)**2) * 4)  # 龜山丘陵
+    + np.random.normal(0, 10, x.shape)
 )
 
-# 建立 DataFrame
 data_dem_list = []
+base_lat, base_lon = 24.99, 121.3
 for i in range(x.shape[0]):
     for j in range(x.shape[1]):
         data_dem_list.append({
@@ -85,7 +76,7 @@ for i in range(x.shape[0]):
         })
 df_dem = pd.DataFrame(data_dem_list)
 
-# --- 2. 設定 Pydeck 圖層 ---
+# --- 2. Pydeck GridLayer 設定 ---
 layer_grid = pdk.Layer(
     "GridLayer",
     data=df_dem,
@@ -94,10 +85,10 @@ layer_grid = pdk.Layer(
     elevation_scale=1,
     cell_size=2000,
     extruded=True,
-    pickable=True,
+    pickable=True
 )
 
-# --- 3. 設定視角 ---
+# --- 3. 視角設定 ---
 view_state_grid = pdk.ViewState(
     latitude=base_lat,
     longitude=base_lon,
@@ -105,12 +96,12 @@ view_state_grid = pdk.ViewState(
     pitch=50
 )
 
-# --- 4. 顯示 3D 模擬地圖 ---
+# --- 4. 顯示地圖 ---
 r_grid = pdk.Deck(
     layers=[layer_grid],
     initial_view_state=view_state_grid,
     tooltip={"text": "海拔高度: {elevationValue} 公尺"},
-    map_style="mapbox://styles/mapbox/satellite-streets-v12"
+    map_style="mapbox://styles/mapbox/light-v11"
 )
 
 st.pydeck_chart(r_grid)
