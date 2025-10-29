@@ -60,9 +60,9 @@ ELEVATION_DATA_URL = 'https://raw.githubusercontent.com/visgl/deck.gl-data/maste
 # 載入 JSON 格式的點位資料
 df_dem = pd.read_json(ELEVATION_DATA_URL)
 
-# 處理資料：將 'position' 欄位的 [lon, lat] 展開
-df_dem['lon'] = df_dem['position'].apply(lambda x: x[0])
-df_dem['lat'] = df_dem['position'].apply(lambda x: x[1])
+# 處理資料：將 'COORDINATES' 欄位的 [lon, lat] 展開
+df_dem['lon'] = df_dem['COORDINATES'].apply(lambda x: x[0])
+df_dem['lat'] = df_dem['COORDINATES'].apply(lambda x: x[1])
 
 # 設定地圖中心點和 GridLayer 參數 (舊金山區域)
 base_lat, base_lon = 37.78, -122.42 
