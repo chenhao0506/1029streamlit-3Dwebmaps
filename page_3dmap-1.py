@@ -58,17 +58,12 @@ st.title("桃園市 DEM 模擬（Pydeck 3D 地圖）")
 x, y = np.meshgrid(np.linspace(-1, 1, 60), np.linspace(-1, 1, 60))
 
 # 模擬桃園地形（北低南高）
-z = (
-    300
-    + 400 * np.exp(-((x - 0.3)**2 + (y + 0.6)**2) * 2)  # 大溪丘陵
-    + 200 * np.exp(-((x + 0.7)**2 + (y - 0.5)**2) * 4)  # 龜山丘陵
-    + np.random.normal(0, 10, x.shape)
-)
+z = np.exp(-(x**2 + y**2) * 2) * 800 + np.random.rand(50, 50) * 200
 
 data_dem_list = []
 base_lat, base_lon = 24.99, 121.3
-for i in range(x.shape[0]):
-    for j in range(x.shape[1]):
+for i in range(50):
+    for j in range(50):
         data_dem_list.append({
             "lon": base_lon + x[i, j] * 0.2,
             "lat": base_lat + y[i, j] * 0.15,
@@ -100,8 +95,7 @@ view_state_grid = pdk.ViewState(
 r_grid = pdk.Deck(
     layers=[layer_grid],
     initial_view_state=view_state_grid,
-    tooltip={"text": "海拔高度: {elevationValue} 公尺"},
-    map_style="mapbox://styles/mapbox/light-v11"
+    tooltip={"text": "海拔高度: {elevationValue} 公尺"}
 )
 
 st.pydeck_chart(r_grid)
