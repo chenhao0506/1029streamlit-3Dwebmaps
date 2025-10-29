@@ -22,7 +22,7 @@ fig_earthquake = px.scatter_geo(
     color="Magnitude",      
     hover_name="Date",      
     projection="orthographic", 
-    title="全球地震分佈 (23k 筆資料)"
+    title="全球地震分佈"
 )
 
 st.plotly_chart(fig_earthquake, use_container_width=True)
