@@ -14,9 +14,9 @@ fig = px.scatter_geo(
     df,
     lat = "Latitude",
     lon = "Longitude",
-    color = "continent",      # 依據地震規模上色
-    hover_name="country",   # 滑鼠懸停時顯示國家名稱
-    size="Magnitude",             # 地震規模代表人口數
+    color = "Magnitude",      # 依據地震規模上色
+    hover_name="Date",   # 滑鼠懸停時顯示日期
+    size="Magnitude",             # 點子大小代表地震規模
     projection="orthographic",
 )
 
